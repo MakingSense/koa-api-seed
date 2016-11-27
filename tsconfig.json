@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "outDir": "build",
+    "target": "es6"
+  },
+  "exclude": [
+    "gulpfile.js",
+    "node_modules"
+  ]
+}

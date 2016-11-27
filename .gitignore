@@ -1,0 +1,50 @@
+.env
+
+# Logs
+*.log
+npm-debug.log*
+logs/*
+
+# Docs
+js.docs
+api.docs
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# testing
+coverage
+$CIRCLE_TEST_REPORTS
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency and build directories
+node_modules
+jspm_packages
+build
+build.zip
+out
+typings
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Database
+*.db
+
+#ide and os
+.idea
+.project
+.DS_STORE
+
+#compressed
+*.zip
