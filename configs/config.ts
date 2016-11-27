@@ -60,4 +60,17 @@ let config = {
 
 };
 
+function checkConfigsAreSet(config, previousKey = '') {
+    Object.keys(config).forEach(key => {
+        if (typeof config[key] === "object") {
+            return checkConfigsAreSet(config[key], `${previousKey ? previousKey + '.' : ''}${key}`)
+        }
+        if (!config[key]) { // value has not been set
+            console.warn(`WARNING: ${previousKey ? previousKey + '.' : ''}${key} is NOT set.`)
+        }
+    });
+}
+
+checkConfigsAreSet(config);
+
 export default config;
