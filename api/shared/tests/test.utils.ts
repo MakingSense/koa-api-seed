@@ -31,9 +31,13 @@ let createUsers = async (number, createAdmin = false) => {
 };
 
 let clearAllUsers = async() => await User.remove({});
+
 let clearAllForgotPassword = async() => await ForgotPassword.remove({});
 
-let getHttpClientFromUser = async(user) => {
+let getHttpClientFromUser = async(user?) => {
+    if (!user) {
+        return request.defaults({json: true});
+    }
     let token = await authService.signToken(user);
     return request.defaults({
         headers: {
