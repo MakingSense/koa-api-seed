@@ -92,7 +92,6 @@ describe('[API] [Users] [Forgot Password]', () => {
             let forgotPassDeleted = await userService.createForgotPassword(deletedUser.email);
             validCode = forgotPass.code;
             validCodeForDeletedUser = forgotPassDeleted.code;
-            console.log(validCodeForDeletedUser);
         });
 
         describe('[Unsuccessful]', () => {
