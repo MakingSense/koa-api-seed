@@ -22,7 +22,7 @@ export class Gulpfile {
     @MergedTask()
     copy() {
         let copyFiles = gulp
-            .src(['.env', '.npmrc', 'package.json', 'logs'])
+            .src(['.npmrc', 'package.json', 'logs'])
             .pipe(gulp.dest('./build'));
         let copyEbextensions = gulp
             .src(['.ebextensions/**/*'])
@@ -77,7 +77,7 @@ export class Gulpfile {
 
     @SequenceTask() // this special annotation using 'run-sequence' module to run returned tasks in sequence
     build() {
-        return ['clean', 'compile', 'copy', 'replace', 'zip'];
+        return ['clean', 'compile', 'copy', 'replace'];
     }
 
     @SequenceTask()

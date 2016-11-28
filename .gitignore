@@ -3,7 +3,6 @@
 # Logs
 *.log
 npm-debug.log*
-logs/*
 
 # Docs
 js.docs
