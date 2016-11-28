@@ -1,7 +1,7 @@
 {
   "name": "@gabzim/api-seed",
   "version": "0.0.1",
-  "description": "Home Safe API",
+  "description": "API Seed",
   "main": "index.js",
   "scripts": {
     "test": "npm test"
