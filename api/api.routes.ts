@@ -2,8 +2,8 @@ import * as Router from 'koa-router';
 import userCtrl from './users/user.controller';
 import authCtrl from './auth/auth.controller';
 
-let api = Router();
-let users = Router();
+let api = new Router();
+let users = new Router();
 
 api.prefix('/api');
 

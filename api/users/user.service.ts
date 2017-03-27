@@ -21,7 +21,7 @@ class UserService {
     }
 
     async findById(id, details = DEFAULT_REQUEST_DETAILS) {
-        let user: any = await User.findById(id);
+        let user = await User.findById(id);
         if (!details.isAdmin && user && user.deletedAt) {
             throw new ApiError(errors.generic.not_found);
         }
@@ -30,7 +30,7 @@ class UserService {
     }
 
     async findByFacebookId(id, details = DEFAULT_REQUEST_DETAILS) {
-        let user: any = await User.findOne({'facebook.id': id});
+        let user = await User.findOne({'facebook.id': id});
         if (!details.isAdmin && user && user.deletedAt) {
             throw new ApiError(errors.generic.not_found);
         }
@@ -39,7 +39,7 @@ class UserService {
     }
 
     async findByEmail(email, details = DEFAULT_REQUEST_DETAILS) {
-        let user: any = await User.findOne({email});
+        let user = await User.findOne({email});
         if (!details.isAdmin && user && user.deletedAt) {
             throw new ApiError(errors.generic.not_found);
         }
@@ -90,7 +90,6 @@ class UserService {
 
         user.set(changes);
         let savedUser = await user.save();
-        savedUser = savedUser.toJSON();
         Logger.log('info', '[UserService] [Update] user updated successfully', {user: savedUser, changes, details});
         return savedUser;
     }

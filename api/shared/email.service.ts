@@ -9,6 +9,8 @@ import template = require("lodash/template");
 let helper = sendgrid.mail;
 let {Email, Content, Mail, Substitution, Personalization} = helper;
 
+interface StringMap { [s: string]: string; }
+
 class EmailService {
     private sg;
 
@@ -17,7 +19,7 @@ class EmailService {
     }
 
     @Toggle('emails')
-    async sendEmail(user, data = {}, subject = '', templateId, details = DEFAULT_REQUEST_DETAILS) {
+    async sendEmail(user, data : StringMap = {}, subject = '', templateId, details = DEFAULT_REQUEST_DETAILS) {
         let from = new Email(config.emails.from);
         let to = new Email(user.email);
         let personalization = new Personalization();

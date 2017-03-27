@@ -4,7 +4,7 @@ import authCtrl from './auth/auth.controller';
 import config from '../configs/config';
 import {Logger} from './shared/logger.service';
 
-let auth = Router();
+let auth = new Router();
 
 auth.prefix('/auth');
 

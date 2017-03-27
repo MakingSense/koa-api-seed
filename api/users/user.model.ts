@@ -1,14 +1,44 @@
-import * as mongoose from 'mongoose';
+import * as _ from 'lodash';
+import {Schema, Document, Model, model} from 'mongoose';
 import * as crypto from 'crypto';
 import {promisify} from 'bluebird';
 import * as timestamps from 'mongoose-timestamp';
 import config from "../../configs/config";
 
+import {Logger} from "../shared/logger.service";
+
+
+export declare interface UserDocument extends Document {
+    id: string;
+    firstName: string;
+    lastName: string;
+    address: any;
+    mobilePhone: string;
+    homePhone: string;
+    email: string;
+    password: string;
+    provider: string;
+    role: string;
+    deletedAt: any;
+    stats: any;
+    token: any;
+    authenticate(plainText): boolean;
+    makeSalt(): string;
+    encryptPassword(password): string;
+}
+
+export declare interface UserModel extends Model<UserDocument> {
+    adminOnlyFields(): string[];
+    validRoles(): string[];
+}
+
+const validRoles = ["user", "admin"];
+
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 let pbkdf2Async: any = promisify(<any>crypto.pbkdf2);
 
-let UserSchema = new mongoose.Schema({
+let UserSchema = new Schema({
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     address: {
@@ -40,6 +70,11 @@ UserSchema.plugin(timestamps);
 UserSchema.static('adminOnlyFields', function () {
     return ['salt', 'password', 'hashedPassword', 'role', 'provider'];
 });
+
+UserSchema.static("validRoles", function () {
+    return validRoles;
+});
+
 /**
  * Virtuals
  */
@@ -199,6 +234,21 @@ UserSchema.methods = {
 
 };
 
-let User = mongoose.model('User', UserSchema);
+UserSchema.set("toJSON", {
+    transform: function (doc, ret, options) {
+        delete ret.hashedPassword;
+        delete ret.salt;
+        return ret;
+    }
+});
+
+Logger.rewriters.push(function (level, msg, meta) {
+    if (meta.user) {
+        meta.user = _.pick(meta.user, "_id", "firstName", "lastName", "email", "role");
+    }
+    return meta;
+});
+
+let User = model<UserDocument, UserModel>("User", UserSchema);
 
 export {User};
