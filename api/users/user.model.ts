@@ -7,8 +7,7 @@ import config from "../../configs/config";
 
 import {Logger} from "../shared/logger.service";
 
-
-export declare interface UserDocument extends Document {
+export declare interface UserJson {
     id: string;
     firstName: string;
     lastName: string;
@@ -22,9 +21,13 @@ export declare interface UserDocument extends Document {
     deletedAt: any;
     stats: any;
     token: any;
+}
+
+export declare interface UserDocument extends UserJson, Document {
     authenticate(plainText): boolean;
     makeSalt(): string;
     encryptPassword(password): string;
+    toJSON(): UserJson;
 }
 
 export declare interface UserModel extends Model<UserDocument> {

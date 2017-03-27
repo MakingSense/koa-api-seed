@@ -10,7 +10,7 @@ export default passport.use(new Local.Strategy({
     async function (email, password, done) {
         try {
             let {user, token} = await authService.login(email, password);
-            done(null, user && user.toJSON());
+            done(null, user);
         } catch (e) {
             done(e);
         }

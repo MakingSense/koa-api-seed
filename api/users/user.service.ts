@@ -22,11 +22,17 @@ class UserService {
 
     async findById(id, details = DEFAULT_REQUEST_DETAILS) {
         let user = await User.findById(id);
-        if (!details.isAdmin && user && user.deletedAt) {
+
+        if (!user) {
+            return null;
+        }
+
+        if (user && user.deletedAt && !details.isAdmin) {
             throw new ApiError(errors.generic.not_found);
         }
+
         Logger.log('info', '[UserService] [Find By Id] user retrieved successfully', {id, details});
-        return user;
+        return user.toJSON();
     }
 
     async findByFacebookId(id, details = DEFAULT_REQUEST_DETAILS) {
@@ -35,7 +41,7 @@ class UserService {
             throw new ApiError(errors.generic.not_found);
         }
         Logger.log('info', '[UserService] [Find By Facebook Id] user retrieved successfully', {id, details});
-        return user;
+        return user.toJSON();
     }
 
     async findByEmail(email, details = DEFAULT_REQUEST_DETAILS) {
@@ -44,7 +50,7 @@ class UserService {
             throw new ApiError(errors.generic.not_found);
         }
         Logger.log('info', '[UserService] [Find By Email] user retrieved successfully', {email, details});
-        return user;
+        return user.toJSON();
     }
 
     async search(query: any = {}, details = DEFAULT_REQUEST_DETAILS) {
@@ -69,7 +75,7 @@ class UserService {
             throw new ApiError(errors.generic.unauthorized);
         }
 
-        let users = await User.find(search);
+        let users = await User.find(search).lean();
 
         return users;
     }
@@ -82,7 +88,7 @@ class UserService {
             changes = this.sanitize(changes);
         }
 
-        let user = await this.findById(id, details);
+        let user = await User.findById(id);
 
         if (!user) {
             throw new ApiError(errors.users.not_found);
@@ -91,7 +97,7 @@ class UserService {
         user.set(changes);
         let savedUser = await user.save();
         Logger.log('info', '[UserService] [Update] user updated successfully', {user: savedUser, changes, details});
-        return savedUser;
+        return savedUser.toJSON();
     }
 
     async delete(id, hard = false, details = DEFAULT_REQUEST_DETAILS) {
@@ -100,26 +106,26 @@ class UserService {
                 Logger.log('error', '[UserService] [Delete] non admin tried to delete another user', {id, hard, details});
                 throw new ApiError(errors.generic.unauthorized);
             }
-            let user: any = await this.findById(id, details);
+            let user = await User.findById(id);
             user.deletedAt = new Date();
             let deletedUser = await user.save();
             Logger.log('info', '[UserService] [Delete] User soft-deleted their account', {user, details});
-            return deletedUser;
+            return deletedUser.toJSON();
         }
         if (hard) {
             let deletedUser = await User.findByIdAndRemove(id);
             Logger.log('info', '[UserService] [Delete] Admin hard-deleted user successfully', {user: deletedUser, details});
             return deletedUser;
         }
-        let user: any = await this.findById(id, details);
+        let user = await User.findById(id);
         user.deletedAt = new Date();
         let deletedUser = await user.save();
         Logger.log('info', '[UserService] [Delete] Admin soft-deleted user successfully', {user, details});
-        return deletedUser;
+        return deletedUser.toJSON();
     }
 
     async checkEmailAndPassword(email, password, details = DEFAULT_REQUEST_DETAILS) {
-        let user: any = await User.findOne({email}).select('+hashedPassword +salt');
+        let user = await User.findOne({email}).select('+hashedPassword +salt');
         if (!user) {
             Logger.log('error', '[UserService] [Check Credentials] User is not registered', {email, details});
             throw new ApiError(errors.generic.unauthenticated);
@@ -133,7 +139,7 @@ class UserService {
             Logger.log('error', '[UserService] [Check Credentials] User marked as deleted attempted to log in', {email, details});
             throw new ApiError(errors.users.user_deleted);
         }
-        return user;
+        return user.toJSON();
     }
 
     async changePassword(id, oldPassword, newPassword, details = DEFAULT_REQUEST_DETAILS) {
