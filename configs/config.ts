@@ -5,8 +5,15 @@ let config = {
 
     port: process.env.PORT || 3000,
 
+    compression: typeof (process.env.COMPRESSION) === "undefined" ? true : process.env.USE_COMPRESSION === "true",
+
     db: {
         url: process.env.DATABASE_URL
+    },
+
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT
     },
 
     test: {

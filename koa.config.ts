@@ -1,7 +1,9 @@
 import * as bodyParser from 'koa-body';
+import * as compress from "koa-compress";
 import * as path from 'path';
 import * as passport from 'koa-passport';
 import * as randomstring from 'randomstring';
+import config from "./configs/config";
 
 function generateRequestId() {
     return randomstring.generate({
@@ -11,7 +13,15 @@ function generateRequestId() {
     });
 }
 
+let compression = compress({
+    threshold: 2048,
+    flush: require("zlib").Z_SYNC_FLUSH
+});
+
 export default (app) => {
+    if (config.compression) {
+        app.use(compression);
+    }
     app.use(bodyParser({formidable: {uploadDir: path.join(__dirname, 'uploads')}}));
     app.use(passport.initialize());
     app.use(async(ctx, next) => {
