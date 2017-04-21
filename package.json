@@ -30,10 +30,12 @@
     "jsonwebtoken": "^7.3.0",
     "koa": "^2.2.0",
     "koa-body": "2",
+    "koa-compose": "^4.0.0",
     "koa-compress": "^2.0.0",
     "koa-jwt": "^3.0.1",
     "koa-passport": "3.0.0",
     "koa-router": "^7.0.1",
+    "koa-socket": "^4.4.0",
     "le_node": "^1.7.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
@@ -47,6 +49,8 @@
     "reflect-metadata": "^0.1.10",
     "request-promise": "^4.2.0",
     "sendgrid": "^4.8.4",
+    "socket.io-client": "^1.7.3",
+    "socket.io-redis": "^4.0.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {

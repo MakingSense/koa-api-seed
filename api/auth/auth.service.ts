@@ -46,6 +46,16 @@ class AuthService {
         let user : any = new User(userData);
         return jwt.sign(user.token, config.jwt.secret, {expiresIn: aWeek});
     }
+
+    checkToken(token) {
+        try {
+            // Throws an error if validation fails
+            return jwt.verify(token, config.jwt.secret);
+        } catch (e) {
+            // Throw exception to let koa log the error
+            throw new ApiError(errors.generic.unauthenticated);
+        }
+    }
 }
 
 let singleton = new AuthService();

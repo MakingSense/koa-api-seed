@@ -16,6 +16,11 @@ let config = {
         port: process.env.REDIS_PORT
     },
 
+    websockets: {
+        enabled: typeof (process.env.WEBSOCKETS_ENABLED) === "undefined" ? true : process.env.USE_COMPRESSION === "true",
+        useAdapter:  process.env.WEBSOCKETS_USE_ADAPTER === "true"
+    },
+
     test: {
         url: process.env.TEST_URL
     },
