@@ -30,8 +30,11 @@ export class Gulpfile {
         let createLogsFolder = gulp
             .src('logs/README.md')
             .pipe(gulp.dest('./build/logs'));
+        let copyTestMedia = gulp
+            .src("api/shared/tests/media/*")
+            .pipe(gulp.dest("./build/api/shared/tests/media"));
 
-        return [copyFiles, copyEbextensions, createLogsFolder];
+        return [copyFiles, copyEbextensions, createLogsFolder, copyTestMedia];
     }
 
     @MergedTask()
@@ -61,6 +64,7 @@ export class Gulpfile {
     @Task()
     e2e() {
         process.env.NODE_ENV = 'test';
+        process.env.USER_UPLOADS_SIZE_LIMIT = 50 * 1024; // 50KB
         let src = argv.src? `build/${argv.src.replace('.ts', '.js')}` : ['build/**/*.e2e.js', 'build/**/*.spec.js'];
         gulp.src(src, {read: false})
         // gulp-mocha needs filepaths so you can't have any plugins before it

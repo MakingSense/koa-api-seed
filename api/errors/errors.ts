@@ -59,6 +59,29 @@ const errors = {
             code: 403,
         },
     },
+    upload: {
+        field_not_found: {
+            message: "FIELD_NOT_FOUND",
+            log: "The field with the file could not be found.",
+            code: 400,
+        },
+        invalid_mime_type: {
+            message: "INVALID_MIME_TYPE",
+            log: "The MIME type for the file is not allowed.",
+            code: 400,
+        },
+        upload_error: {
+            message: "UPLOAD_ERROR",
+            log: "The file could not be uploaded.",
+            code: 400,
+        },
+        file_too_large: {
+            message: "FILE_TOO_LARGE_ERROR",
+            log: "The file is too large.",
+            code: 400,
+        }
+
+    },
     generic: {
         internal_server_error: {
             message: 'INTERNAL_SERVER_ERROR',

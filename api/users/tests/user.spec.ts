@@ -2,7 +2,7 @@ import {
     getRandomUser,
     clearAllUsers,
     getHttpClientFromUser,
-    createUsers, createUser
+    createUsers, createUser, imagesPaths
 } from "../../shared/tests/test.utils";
 
 let app = require('../../../index');
@@ -15,6 +15,7 @@ import {expect} from 'chai';
 import config from '../../../configs/config';
 
 import userService from '../user.service';
+import * as fs from "fs";
 
 const baseEndpoint = `${config.test.url}/api/users`;
 
@@ -22,10 +23,10 @@ let request = requestPromise.defaults({json: true});
 
 describe('[API] [Users]', () => {
 
-    describe('[Create]', () => {
+    describe('[CREATE]', () => {
         before(clearAllUsers);
 
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
 
             it('should not create a user without an email', async() => {
                 let body = getRandomUser();
@@ -73,7 +74,7 @@ describe('[API] [Users]', () => {
 
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should create a user', async() => {
                 let body = getRandomUser();
                 let savedUser = await request.post(baseEndpoint, {body});
@@ -101,7 +102,7 @@ describe('[API] [Users]', () => {
             userB = users[2];
         });
 
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
             it('should not allow unauthenticated users to fetch all users', async() => {
                 try {
                     let users = await request.get(baseEndpoint);
@@ -175,7 +176,7 @@ describe('[API] [Users]', () => {
             });
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should allow a user to retrieve their profile using their id', async() => {
                 let request = await getHttpClientFromUser(userA);
                 let user = await request.get(`${baseEndpoint}/${userA._id.toString()}`);
@@ -205,7 +206,7 @@ describe('[API] [Users]', () => {
             userB = users[2];
         });
 
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
             it('should not let an unauthenticated user update an existing user', async() => {
                 let body = {
                     firstName: 'yooo'
@@ -281,7 +282,7 @@ describe('[API] [Users]', () => {
 
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should let a user change their name', async() => {
                 let request = await getHttpClientFromUser(userB);
                 let body = {
@@ -319,7 +320,7 @@ describe('[API] [Users]', () => {
             userC = await createUser(false, {deletedAt: new Date()});
         });
 
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
             it(`should not let an unauthenticated user update an existing user's password`, async() => {
                 let body = {
                     oldPassword: 'Test#1234',
@@ -406,7 +407,7 @@ describe('[API] [Users]', () => {
 
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should not let an authenticated user change their password if they send the correct old one', async() => {
                 let request = await getHttpClientFromUser(userA);
                 let oldPassword = 'Test#1234';
@@ -434,7 +435,7 @@ describe('[API] [Users]', () => {
             userC = users[3];
             userD = users[4];
         });
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
             it('should not allow an unauthenticated user to delete himself', async() => {
                 try {
                     let users = await request.delete(`${baseEndpoint}/me`);
@@ -465,7 +466,7 @@ describe('[API] [Users]', () => {
             });
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should allow an authenticated user to soft delete himself', async() => {
                 let request = await getHttpClientFromUser(userA);
                 let deletedUser = await request.delete(`${baseEndpoint}/${userA._id.toString()}`);
@@ -518,7 +519,7 @@ describe('[API] [Users]', () => {
             userC = await createUser(false, {firstName: 'UserC', email: 'userC@user.com', deletedAt: new Date()});
         });
 
-        describe('[Unsuccessful]', () => {
+        describe('[UNSUCCESSFUL]', () => {
             it('should not allow unauthenticated users to fetch all users', async() => {
                 try {
                     let users = await request.get(baseEndpoint);
@@ -554,7 +555,7 @@ describe('[API] [Users]', () => {
 
         });
 
-        describe('[Successful]', () => {
+        describe('[SUCCESSFUL]', () => {
             it('should allow an admin user to search for users without any query', async() => {
                 let request = await getHttpClientFromUser(admin);
                 let users = await request.get(`${baseEndpoint}`);
@@ -609,6 +610,82 @@ describe('[API] [Users]', () => {
         });
 
         after(clearAllUsers);
+
+    });
+
+    describe("[SET IMAGE]", () => {
+        let user, admin;
+
+        before(clearAllUsers);
+
+        before(async () => {
+            user = await createUser();
+            admin = await createUser(true);
+        });
+
+        describe("[UNSUCCESSFUL]", () => {
+            it("should not let an unauthenticated user set a profile picture", async () => {
+                let formData = {
+                    image: fs.createReadStream(imagesPaths.users.correct)
+                };
+                try {
+                    let updatedUser = await request.post(`${baseEndpoint}/${user._id}/image`, {formData});
+                    expect(updatedUser).not.to.exist;
+                } catch (e) {
+                    expect(e.statusCode).to.eql(401);
+                }
+            });
+
+            it("should not let an admin upload a image larger than allowed", async () => {
+                let request = await getHttpClientFromUser(admin);
+                let formData = {
+                    image: fs.createReadStream(imagesPaths.users.large)
+                };
+                try {
+                    let updatedUser = await request.post(`${baseEndpoint}/${user._id}/image`, {formData});
+                    expect(updatedUser).not.to.exist;
+                } catch (e) {
+                    expect(e.statusCode).to.eql(400);
+                }
+            });
+
+            it("should not let an admin upload a image in another field", async () => {
+                let request = await getHttpClientFromUser(admin);
+                let formData = {
+                    another: fs.createReadStream(imagesPaths.users.correct)
+                };
+                try {
+                    let updatedUser = await request.post(`${baseEndpoint}/${user._id}/image`, {formData});
+                    expect(updatedUser).not.to.exist;
+                } catch (e) {
+                    expect(e.statusCode).to.eql(400);
+                }
+            });
+
+            it("should not let an admin upload a file with the wrong mime type", async () => {
+                let request = await getHttpClientFromUser(admin);
+                let formData = {
+                    image: fs.createReadStream(__dirname + "/../user.controller.js")
+                };
+                try {
+                    let updatedUser = await request.post(`${baseEndpoint}/${user._id}/image`, {formData});
+                    expect(updatedUser).not.to.exist;
+                } catch (e) {
+                    expect(e.statusCode).to.eql(400);
+                }
+            });
+        });
+
+        describe("[SUCCESSFUL]", () => {
+            it("should let a user update their profile picture", async () => {
+                let request = await getHttpClientFromUser(admin);
+                let formData = {
+                    image: fs.createReadStream(imagesPaths.users.correct)
+                };
+                let updatedUser = await request.post(`${baseEndpoint}/${user._id}/image`, {formData});
+                expect(updatedUser.media.profilePhoto).not.to.be.empty;
+            });
+        });
 
     });
 

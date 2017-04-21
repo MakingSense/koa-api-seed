@@ -5,6 +5,7 @@ import AuthService from '../auth/auth.service';
 
 import {ApiError} from "../errors/api-error.errors";
 import {errors} from "../errors/errors";
+import {UserDocument} from "./user.model";
 
 class UserController {
 
@@ -20,11 +21,12 @@ class UserController {
         }
 
         let user = await UserService.findById(id, requestDetails);
-        ctx.state.loadedUser = user;
+        ctx.state.user = user;
         await next();
     }
+
     async show(ctx, next) {
-        let user = ctx.state.loadedUser;
+        let user = ctx.state.user;
         if (!user) {
             throw new ApiError(errors.users.not_found);
         }
@@ -103,6 +105,20 @@ class UserController {
         let id = ctx.params.userId;
         let removedUser = await UserService.delete(id, hard, requestDetails);
         ctx.body = removedUser;
+    }
+
+    async setImage(ctx, next) {
+        let requestDetails = ctx.details;
+        let user: UserDocument = ctx.state.user;
+        let image = ctx.state.fileUrl;
+        let changes = {
+            media: {
+                profilePhoto: image
+            }
+        };
+        let updatedUser = await UserService.update(user, changes, requestDetails);
+        ctx.body = updatedUser;
+        await next();
     }
 }
 

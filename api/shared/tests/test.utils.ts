@@ -7,6 +7,7 @@ import {getRandomUser} from './fixtures/user.fixture';
 import userService from '../../users/user.service';
 import authService from '../../auth/auth.service';
 import {ForgotPassword} from "../../users/forgot-password-request.model";
+import * as path from "path";
 
 let User = mongoose.model('User');
 
@@ -47,5 +48,12 @@ let getHttpClientFromUser = async(user?) => {
     });
 };
 
+let imagesPaths = {
+    users: {
+        correct: path.resolve(__dirname + "/media/image_correct.jpg"),
+        large: path.resolve(__dirname + "/media/image_large.jpg")
+    }
+};
 
-export {getRandomInt, getRandomUser, createUser, createUsers, clearAllUsers, clearAllForgotPassword, getHttpClientFromUser};
+
+export {imagesPaths, getRandomInt, getRandomUser, createUser, createUsers, clearAllUsers, clearAllForgotPassword, getHttpClientFromUser};

@@ -1,12 +1,13 @@
 import * as Router from 'koa-router';
 import userCtrl from './users/user.controller';
 import authCtrl from './auth/auth.controller';
+import {getMultipartParser, getUploadValidationMiddleware} from "./middleware/file-upload.middleware";
+import uploadStrategyDecider from "./middleware/uploadStrategyDecider";
 
 let api = new Router();
 let users = new Router();
 
 api.prefix('/api');
-
 
 /**
  * User Routes
@@ -29,6 +30,13 @@ users.get('/:user', userCtrl.show);
 users.put('/:userId', userCtrl.update);
 users.put('/:userId/password', userCtrl.changePassword);
 users.delete('/:userId', userCtrl.delete);
+users.post(
+    "/:user/image",
+    getMultipartParser("users"),
+    getUploadValidationMiddleware("users"),
+    uploadStrategyDecider("users"),
+    userCtrl.setImage
+);
 
 /**
  * Mount routers

@@ -17,6 +17,9 @@ export declare interface UserJson {
     email: string;
     password: string;
     provider: string;
+    media: {
+        profilePhoto: string;
+    };
     role: string;
     deletedAt: any;
     stats: any;
@@ -58,6 +61,9 @@ let UserSchema = new Schema({
     role: {type: String, default: 'user'},
     google: {},
     facebook: {},
+    media: {
+        profilePhoto: String
+    },
     stats: {
         lastLogin: Date,
         timesLoggedIn: {type: Number, default: 0}

@@ -47,3 +47,9 @@ typings
 
 #compressed
 *.zip
+temp/*
+!temp/.gitkeep
+
+uploads/*/*
+!uploads/.gitkeep
+!uploads/*/.gitkeep

@@ -68,7 +68,34 @@ let config = {
         emails: process.env.TOGGLE_EMAILS
     },
 
-    iterations: Number(process.env.PASSWORD_ITERATIONS) || 1
+    iterations: Number(process.env.PASSWORD_ITERATIONS) || 1,
+
+    uploads: {
+        temp: process.env.UPLOADS_TEMP || path.resolve(__dirname + "/../../temp"),
+        base: process.env.UPLOADS_BASE || "/uploads",
+        strategy: process.env.UPLOADS_STRATEGY || "local",
+        local: {
+            path: process.env.UPLOADS_LOCAL_PATH || path.resolve(__dirname + "/../.."),
+            host: process.env.UPLOADS_LOCAL_HOST || "http://localhost:3000",
+        },
+        s3: {
+            version: process.env.UPLOADS_S3_API_VERSION || "2006-03-01",
+            region: process.env.UPLOADS_S3_REGION || "us-west-2",
+            accessKey: process.env.UPLOADS_S3_ACCESS_KEY || "access_key",
+            secretKey: process.env.UPLOADS_S3_SECRET_KEY || "access_secret",
+            omitCredentials: process.env.UPLOADS_S3_OMIT_CREDENTIALS === "true" || false,
+            // Bucket for all assets, can be overriden for each individual resource
+            bucket: process.env.UPLOADS_S3_BUCKET || "assets"
+        },
+        users: {
+            base: "/users",
+            allowedTypes: process.env.USER_UPLOADS_ALLOWED_TYPES || ["image/jpeg", "image/gif", "image/png"],
+            sizeLimit: process.env.USER_UPLOADS_SIZE_LIMIT || 2 * 1024 * 1024, // 2MB
+            field: process.env.USER_UPLOADS_FIELD || "image",
+            prefix: process.env.USER_UPLOADS_S3_PREFIX || "user-",
+            bucket: process.env.USER_UPLOADS_S3_BUCKET
+        },
+    }
 
 };
 
