@@ -30,9 +30,9 @@ app.use(errorHandler);
 app.use(auth.routes());
 app.use(api.routes());
 app.use(status.routes());
-
 app.use(auth.allowedMethods());
 app.use(api.allowedMethods());
+app.use(status.allowedMethods());
 
 if (config.uploads.strategy === "local") {
     app.use(localUploads);
