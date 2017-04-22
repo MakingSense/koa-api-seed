@@ -24,7 +24,7 @@ let magicDetect = promisify(magic.detectFile, {
 // copying the file into a temporary dir. It only
 // accepts multipart requests and will ignore
 // any non-file param
-let getMultipartParser = function(resource) {
+let getMultipartParser = function (resource) {
     return bodyParser({
         multipart: true,
         urlencoded: false,
@@ -42,14 +42,14 @@ let getMultipartParser = function(resource) {
 
 // Creates a middleware that will validate the uploaded
 // file and move it into its final destination
-let getUploadValidationMiddleware = function(resource) {
-    let { field, base, allowedTypes, sizeLimit } = config.uploads[resource];
+let getUploadValidationMiddleware = function (resource) {
+    let {field, base, allowedTypes, sizeLimit} = config.uploads[resource];
     let destPath = config.uploads.base + base;
 
     return async function uploadValidationMiddleware(ctx, next) {
         // Check if file exists
         let sourceFile = ctx.request.body.files[field];
-        if (! sourceFile) {
+        if (!sourceFile) {
             throw new ApiError(errors.upload.field_not_found);
         }
 

@@ -10,7 +10,7 @@ let s3Options: any = {
     region: config.uploads.s3.region
 };
 
-if (! config.uploads.s3.omitCredentials) {
+if (!config.uploads.s3.omitCredentials) {
     // Credentials can be configured on the instance, either by
     // using a IAM role or by setting the ~/.aws/credentials file
     let credentials = new Credentials({
@@ -26,7 +26,7 @@ export default function getS3UploadMiddleware(resource) {
 
     let bucket = config.uploads[resource].bucket || config.uploads.s3.bucket;
 
-    let { field } = config.uploads[resource];
+    let {field} = config.uploads[resource];
 
     return async function s3UploadMiddleware(ctx, next) {
         let sourceFile = ctx.request.body.files[field];

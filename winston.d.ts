@@ -2,7 +2,7 @@ import {WinstonModuleTrasportInstance} from "winston";
 
 export declare var transports: Transports;
 
-declare module 'winston' {
+declare module "winston" {
     interface Transports {
         Logentries: WinstonModuleTrasportInstance;
     }

@@ -1,8 +1,8 @@
 "use strict";
 
-import * as winston from 'winston';
-import 'le_node';
-import config from '../../configs/config';
+import * as winston from "winston";
+import "le_node";
+import config from "../../configs/config";
 let logger;
 
 var logLevels = {
@@ -15,19 +15,19 @@ var logLevels = {
         silly: 5
     },
     colors: {
-        error: 'red',
-        warn: 'yellow',
-        info: 'cyan',
-        verbose: 'black',
-        debug: 'green',
-        silly: 'black'
+        error: "red",
+        warn: "yellow",
+        info: "cyan",
+        verbose: "black",
+        debug: "green",
+        silly: "black"
     }
 };
 
 winston.setLevels(logLevels.levels);
 winston.addColors(logLevels.colors);
 
-if (config.env === 'test') {
+if (config.env === "test") {
     logger = new (winston.Logger)({
         transports: [
             new (winston.transports.File)({filename: config.logs.files.all})
@@ -48,17 +48,17 @@ if (config.env === 'test') {
         }),
         new winston.transports.Console({colorize: true, level: config.logs.levels.console, timestamp: true}),
         new winston.transports.File({
-            name: 'errorLog',
+            name: "errorLog",
             colorize: true,
             timestamp: true,
-            level: 'error',
+            level: "error",
             maxsize: 2097152 /* 2MB */,
             maxFiles: 7,
             filename: config.logs.files.errors,
             handleExceptions: true
         }),
         new winston.transports.File({
-            name: 'everythingLog',
+            name: "everythingLog",
             colorize: true,
             timestamp: true,
             level: config.logs.levels.file,
@@ -67,10 +67,10 @@ if (config.env === 'test') {
             filename: config.logs.files.all
         }),
         new winston.transports.File({
-            name: 'eventLog',
+            name: "eventLog",
             colorize: true,
             timestamp: true,
-            level: 'event',
+            level: "event",
             maxsize: 2097152 /* 2MB */,
             maxFiles: 3,
             filename: config.logs.files.events
@@ -90,14 +90,13 @@ if (config.env === 'test') {
         exceptionHandlers: exceptionHandlers,
         exitOnError: false
     });
-    logger.info('logger initialized.');
+    logger.info("logger initialized.");
     logger.stream = {
         write: function (message, encoding) {
             logger.info(message.slice(0, -1));
         }
     };
 }
-
 
 
 export {logger as Logger}

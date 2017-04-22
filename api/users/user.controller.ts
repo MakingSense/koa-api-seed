@@ -1,7 +1,7 @@
-import {ObjectID} from 'mongodb';
+import {ObjectID} from "mongodb";
 
-import UserService from './user.service';
-import AuthService from '../auth/auth.service';
+import UserService from "./user.service";
+import AuthService from "../auth/auth.service";
 
 import {ApiError} from "../errors/api-error.errors";
 import {errors} from "../errors/errors";
@@ -12,7 +12,7 @@ class UserController {
     async loadUser(id, ctx, next) {
         let requestDetails = ctx.details;
 
-        if (id === 'me' && ctx.state.user) {
+        if (id === "me" && ctx.state.user) {
             id = new ObjectID(ctx.state.user._id);
         }
 
@@ -50,7 +50,7 @@ class UserController {
     async createForgotPassword(ctx, next) {
         let requestDetails = ctx.details;
         let email = ctx.request.body.email;
-        ctx.body = '';
+        ctx.body = "";
         try {
             await UserService.createForgotPassword(email, requestDetails);
         } catch (err) {
@@ -101,7 +101,7 @@ class UserController {
 
     async delete(ctx, next) {
         let requestDetails = ctx.details;
-        let hard = ctx.query.hard === 'true';
+        let hard = ctx.query.hard === "true";
         let id = ctx.params.userId;
         let removedUser = await UserService.delete(id, hard, requestDetails);
         ctx.body = removedUser;

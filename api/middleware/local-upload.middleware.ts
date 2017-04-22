@@ -7,7 +7,7 @@ import config from "../../configs/config";
 let fsRename = promisify(fs.rename);
 
 export default function getLocalUploadMiddleware(resource) {
-    let { base, field } = config.uploads[resource];
+    let {base, field} = config.uploads[resource];
     let destPath = config.uploads.base + base;
 
     return async function localUploadMiddleware(ctx, next) {

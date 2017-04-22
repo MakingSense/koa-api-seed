@@ -1,11 +1,11 @@
-import * as passport from 'koa-passport';
-import * as Local from 'passport-local';
+import * as passport from "koa-passport";
+import * as Local from "passport-local";
 
-import authService from '../../auth/auth.service';
+import authService from "../../auth/auth.service";
 
 export default passport.use(new Local.Strategy({
-        usernameField: 'email',
-        passwordField: 'password'
+        usernameField: "email",
+        passwordField: "password"
     },
     async function (email, password, done) {
         try {

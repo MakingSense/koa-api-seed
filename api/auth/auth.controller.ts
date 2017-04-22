@@ -1,16 +1,16 @@
-import * as jwt from 'koa-jwt';
-import * as passport from 'koa-passport';
+import * as jwt from "koa-jwt";
+import * as passport from "koa-passport";
 
-import config from '../../configs/config';
+import config from "../../configs/config";
 
-import authService from './auth.service';
+import authService from "./auth.service";
 import {ApiError} from "../errors/api-error.errors";
 import {errors} from "../errors/errors";
 
 class AuthController {
 
     async login(ctx, next) {
-        await passport.authenticate('local', async(err, user, info) => {
+        await passport.authenticate("local", async (err, user, info) => {
             let error = err || info;
 
             if (error) {
@@ -21,7 +21,7 @@ class AuthController {
 
             if (!user) {
                 ctx.status = 404;
-                ctx.body = {message: 'Something went wrong, please try again.'};
+                ctx.body = {message: "Something went wrong, please try again."};
                 return;
             }
 
@@ -48,7 +48,7 @@ class AuthController {
             return next();
         }
         ctx.details.user = ctx.state.user;
-        ctx.details.isAdmin = ctx.details.user.role === 'admin';
+        ctx.details.isAdmin = ctx.details.user.role === "admin";
         await next();
     }
 
@@ -57,20 +57,20 @@ class AuthController {
         if (!user) {
             throw new ApiError(errors.generic.unauthenticated);
         }
-        if (user.role !== 'admin') {
+        if (user.role !== "admin") {
             throw new ApiError(errors.generic.unauthorized);
         }
         await next();
     }
 
-    facebook = passport.authenticate('facebook', {
-        scope: ['email', 'public_profile', 'user_about_me'],
-        failureRedirect: '/signup',
+    facebook = passport.authenticate("facebook", {
+        scope: ["email", "public_profile", "user_about_me"],
+        failureRedirect: "/signup",
         session: false
     });
 
     async facebookCallback(ctx, next) {
-        await passport.authenticate('facebook', {
+        await passport.authenticate("facebook", {
             session: false
         })(ctx, next);
     };
@@ -78,11 +78,11 @@ class AuthController {
     async setTokenCookie(ctx, next) {
         let user = ctx.state.user;
         if (!user) {
-            ctx.throw(404, 'Something went wrong, please try again');
+            ctx.throw(404, "Something went wrong, please try again");
         }
         let token = authService.signToken(user);
-        ctx.cookies.set('token', JSON.stringify(token));
-        ctx.redirect('/');
+        ctx.cookies.set("token", JSON.stringify(token));
+        ctx.redirect("/");
     }
 }
 

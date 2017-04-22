@@ -1,15 +1,15 @@
-import * as bodyParser from 'koa-body';
+import * as bodyParser from "koa-body";
 import * as compress from "koa-compress";
-import * as path from 'path';
-import * as passport from 'koa-passport';
-import * as randomstring from 'randomstring';
+import * as path from "path";
+import * as passport from "koa-passport";
+import * as randomstring from "randomstring";
 import config from "./configs/config";
 
 function generateRequestId() {
     return randomstring.generate({
         length: 8,
-        charset: 'alphanumeric',
-        capitalization: 'lowercase'
+        charset: "alphanumeric",
+        capitalization: "lowercase"
     });
 }
 
@@ -22,14 +22,14 @@ export default (app) => {
     if (config.compression) {
         app.use(compression);
     }
-    app.use(bodyParser({formidable: {uploadDir: path.join(__dirname, 'uploads')}}));
+    app.use(bodyParser({formidable: {uploadDir: path.join(__dirname, "uploads")}}));
     app.use(passport.initialize());
-    app.use(async(ctx, next) => {
+    app.use(async (ctx, next) => {
         ctx.details = {
             requestId: generateRequestId(),
             user: null,
             isAdmin: false,
-            source: 'API'
+            source: "API"
         };
         await next();
     });
@@ -37,7 +37,7 @@ export default (app) => {
 
 const DEFAULT_REQUEST_DETAILS = {
     isAdmin: true,
-    source: 'TEST',
+    source: "TEST",
     user: {
         _id: null
     }

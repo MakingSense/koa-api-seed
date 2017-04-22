@@ -1,10 +1,10 @@
-import {getRandomInt} from '../test.utils';
+import {getRandomInt} from "../test.utils";
 
 const userFixture = {
-    firstName: 'Test ',
-    lastName: 'Guy',
-    email: 'test@email.com',
-    password: 'Test#1234'
+    firstName: "Test ",
+    lastName: "Guy",
+    email: "test@email.com",
+    password: "Test#1234"
 };
 
 let getRandomUser = (props = {}) => {

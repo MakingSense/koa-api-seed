@@ -1,17 +1,17 @@
-import * as passport from 'koa-passport';
-import * as Facebook from 'passport-facebook';
+import * as passport from "koa-passport";
+import * as Facebook from "passport-facebook";
 
-import config from '../../../configs/config';
+import config from "../../../configs/config";
 
-import authService from '../auth.service';
-import userService from '../../users/user.service';
-import {Logger} from '../../shared/logger.service';
+import authService from "../auth.service";
+import userService from "../../users/user.service";
+import {Logger} from "../../shared/logger.service";
 
 export default passport.use(new Facebook.Strategy({
         clientID: config.facebook.clientId,
         clientSecret: config.facebook.clientSecret,
-        callbackURL: '/auth/facebook/callback',
-        profileFields: ['email', 'name']
+        callbackURL: "/auth/facebook/callback",
+        profileFields: ["email", "name"]
     },
     async function (accessToken, refreshToken, profile, done) {
         try {
@@ -22,8 +22,8 @@ export default passport.use(new Facebook.Strategy({
                     firstName: profile.name.givenName,
                     lastName: profile.name.familyName,
                     email: profile.emails && profile.emails[0].value,
-                    role: 'user',
-                    provider: 'facebook',
+                    role: "user",
+                    provider: "facebook",
                     active: true,
                     facebook: profile._json,
                     stats: {
@@ -35,8 +35,8 @@ export default passport.use(new Facebook.Strategy({
                 Logger.info(`[Http] [Auth Facebook] User signed up using Facebook. Whooray!`, {user});
             } else {
                 if (user.deletedAt) {
-                    Logger.log('warn', '[API] [Auth] Deleted user attempted to log in through facebook', {user});
-                    return done(null, false, {message: 'This account has been disabled'});
+                    Logger.log("warn", "[API] [Auth] Deleted user attempted to log in through facebook", {user});
+                    return done(null, false, {message: "This account has been disabled"});
                 }
 
                 let changes = {lastLogin: new Date, timesLoggedIn: user.stats.timesLoggedIn + 1};

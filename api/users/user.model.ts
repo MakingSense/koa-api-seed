@@ -1,8 +1,8 @@
-import * as _ from 'lodash';
-import {Schema, Document, Model, model} from 'mongoose';
-import * as crypto from 'crypto';
-import {promisify} from 'bluebird';
-import * as timestamps from 'mongoose-timestamp';
+import * as _ from "lodash";
+import {Schema, Document, Model, model} from "mongoose";
+import * as crypto from "crypto";
+import {promisify} from "bluebird";
+import * as timestamps from "mongoose-timestamp";
 import config from "../../configs/config";
 
 import {Logger} from "../shared/logger.service";
@@ -40,7 +40,7 @@ export declare interface UserModel extends Model<UserDocument> {
 
 const validRoles = ["user", "admin"];
 
-const authTypes = ['github', 'twitter', 'facebook', 'google'];
+const authTypes = ["github", "twitter", "facebook", "google"];
 
 let pbkdf2Async: any = promisify(<any>crypto.pbkdf2);
 
@@ -58,7 +58,7 @@ let UserSchema = new Schema({
     homePhone: String,
     email: {type: String, default: null},
     provider: String,
-    role: {type: String, default: 'user'},
+    role: {type: String, default: "user"},
     google: {},
     facebook: {},
     media: {
@@ -76,8 +76,8 @@ let UserSchema = new Schema({
 UserSchema.plugin(timestamps);
 
 
-UserSchema.static('adminOnlyFields', function () {
-    return ['salt', 'password', 'hashedPassword', 'role', 'provider'];
+UserSchema.static("adminOnlyFields", function () {
+    return ["salt", "password", "hashedPassword", "role", "provider"];
 });
 
 UserSchema.static("validRoles", function () {
@@ -88,7 +88,7 @@ UserSchema.static("validRoles", function () {
  * Virtuals
  */
 UserSchema
-    .virtual('password')
+    .virtual("password")
     .set(async function (password) {
         this._password = password;
         this.salt = this.makeSalt();
@@ -99,7 +99,7 @@ UserSchema
 
 // Public profile information
 UserSchema
-    .virtual('profile')
+    .virtual("profile")
     .get(() => ({
         name: this.name,
         role: this.role
@@ -107,13 +107,13 @@ UserSchema
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
-    .virtual('token')
+    .virtual("token")
     .get(function () {
         return {
-            '_id': this._id,
-            'role': this.role,
-            'firstName': this.firstName,
-            'lastName': this.lastName
+            "_id": this._id,
+            "role": this.role,
+            "firstName": this.firstName,
+            "lastName": this.lastName
         }
     });
 
@@ -123,31 +123,31 @@ UserSchema
 
 // Validate empty email
 UserSchema
-    .path('email')
+    .path("email")
     .validate(email => {
         //only required if user did not use oauth to signin/signup.
         if (authTypes.indexOf(this.provider) !== -1) {
             return true;
         }
         return email && email.length;
-    }, 'Email cannot be blank');
+    }, "Email cannot be blank");
 
 // Validate empty password
 UserSchema
-    .path('hashedPassword')
+    .path("hashedPassword")
     .validate(hashedPassword => {
         if (authTypes.indexOf(this.provider) !== -1) return true;
         return hashedPassword.length;
-    }, 'Password cannot be blank');
+    }, "Password cannot be blank");
 
 // Validate email is not taken
 UserSchema
-    .path('email')
+    .path("email")
     .validate(async function (value, respond) {
         let self = this;
 
         //if the email field hasn't been touched, skip this validation
-        if (!this.isModified('email')) {
+        if (!this.isModified("email")) {
             return respond(true);
         }
 
@@ -159,7 +159,7 @@ UserSchema
         }
 
         respond(true);
-    }, 'The specified email address is already in use.');
+    }, "The specified email address is already in use.");
 
 let validatePresenceOf = function (value) {
     return value && value.length;
@@ -169,14 +169,14 @@ let validatePresenceOf = function (value) {
  * Pre-save hook
  */
 UserSchema
-    .pre('save', function (next) {
+    .pre("save", function (next) {
         if (!this.isNew) {
             next();
             return;
         }
 
         if (!validatePresenceOf(this._password) && authTypes.indexOf(this.provider) === -1) {
-            return next(this.invalidate('hashedPassword', 'A password must be set', undefined));
+            return next(this.invalidate("hashedPassword", "A password must be set", undefined));
         }
 
         next();
@@ -186,7 +186,7 @@ UserSchema
  * Pre-save hook
  */
 UserSchema
-    .pre('save', true, async function (next, done) {
+    .pre("save", true, async function (next, done) {
         if (!this._password) {
             next();
             return done();
@@ -224,7 +224,7 @@ UserSchema.methods = {
      * @api public
      */
     makeSalt: function () {
-        return crypto.randomBytes(16).toString('base64');
+        return crypto.randomBytes(16).toString("base64");
     },
 
     /**
@@ -235,10 +235,10 @@ UserSchema.methods = {
      * @api public
      */
     encryptPassword: async function (password) {
-        if (!password || !this.salt) return '';
-        let salt = new Buffer(this.salt, 'base64');
-        let encrypted = await pbkdf2Async(password, salt, config.iterations, 64, 'sha512');
-        return encrypted.toString('base64');
+        if (!password || !this.salt) return "";
+        let salt = new Buffer(this.salt, "base64");
+        let encrypted = await pbkdf2Async(password, salt, config.iterations, 64, "sha512");
+        return encrypted.toString("base64");
     }
 
 };

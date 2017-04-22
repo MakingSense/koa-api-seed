@@ -1,6 +1,6 @@
-import {Logger} from '../shared/logger.service';
-import config from '../../configs/config';
-import {ApiError} from '../errors/api-error.errors';
+import {Logger} from "../shared/logger.service";
+import config from "../../configs/config";
+import {ApiError} from "../errors/api-error.errors";
 
 export default async function (ctx, next) {
     let details = ctx.details;

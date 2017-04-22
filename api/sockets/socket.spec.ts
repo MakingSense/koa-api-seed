@@ -1,9 +1,9 @@
-let app = require('../../index');
+let app = require("../../index");
 
 import config from "../../configs/config";
 
 
-describe('[API] [Sockets]', () => {
+describe("[API] [Sockets]", () => {
     let socket;
 
     before(done => {
@@ -11,7 +11,7 @@ describe('[API] [Sockets]', () => {
         socket.on("connect", done);
     });
 
-    it('should connect to socket', done => {
+    it("should connect to socket", done => {
         socket.emit("syn");
         socket.on("ack", done);
     });
