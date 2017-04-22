@@ -61,52 +61,81 @@ Users, Roles, Emails, Websockets, Logging, Facebook, Live Reload, S3 Uploads, TD
 
 ## Environment Variables Used
 
-NODE_ENV
-PORT
-DATABASE_URL
+#### Core
+`NODE_ENV` = "development", "production", etc.
 
-REDIS_HOST
-REDIS_PORT
+`PORT` = port to which KOA will bind.
 
-WEBSOCKETS_ENABLED
-WEBSOCKETS_USE_ADAPTER
+`DATABASE_URL` = URI for the MongoDB database.
 
-TEST_URL
+`REDIS_HOST` = Redis Host
 
-JWT_SECRET
+`REDIS_PORT` = Redis Port
 
-FACEBOOK_CLIENT_ID
-FACEBOOK_CLIENT_SECRET
+`WEBSOCKETS_ENABLED` = true/false Whether Websockets should be enabled.
 
-FORGOT_PASSWORD_DURATION_AMOUNT
-FORGOT_PASSWORD_DURATION_UNIT
+`WEBSOCKETS_USE_ADAPTER` = Whether or not to use redis With Socket.io, Use this if you are running in a cluster.
 
-EMAIL_FROM
-EMAIL_API_KEY
+`TEST_URL` = The URL the tests should hit
 
-LOGENTRIES_LEVEL
-LOGENTRIES_TOKEN
+#### Social Networks
+`FACEBOOK_CLIENT_ID`
 
-LOG_FILE_ERRORS
-LOG_FILE_ALL
-LOG_FILE_EVENTS
-LOG_LEVELS_CONSOLE
-LOG_LEVELS_FILE
+`FACEBOOK_CLIENT_SECRET`
 
-TOGGLE_EMAILS
+#### JWT Secret and Password Recovery
+`PASSWORD_ITERATIONS` = How many iterations to use in password hashing
 
-PASSWORD_ITERATIONS
+`JWT_SECRET` = The secret to use to sign your JWT Tokens
 
-UPLOADS_TEMP
-UPLOADS_BASE
-UPLOADS_STRATEGY
+`FORGOT_PASSWORD_DURATION_AMOUNT` = How long should a password recovery token last. Eg. `1`
 
-UPLOADS_LOCAL_PATH
-UPLOADS_LOCAL_HOST
+`FORGOT_PASSWORD_DURATION_UNIT` = How long should a password recovery token last. Eg. `days`
 
-UPLOADS_S3_API_VERSION
-UPLOADS_S3_REGION
-UPLOADS_S3_ACCESS_KEY
-UPLOADS_S3_SECRET_KEY
-UPLOADS_S3_OMIT_CREDENTIALS
-UPLOADS_S3_BUCKET
+#### Emails
+`TOGGLE_EMAILS` = Whether or not to activate email sending. If deactivated, when you send an email it will behave as a noop.
+
+`EMAIL_FROM` = The email used to send emails.
+
+`EMAIL_API_KEY` = Sendgrid token.
+
+#### Logging
+`LOGENTRIES_LEVEL` = Level to use in logentries. 
+
+`LOGENTRIES_TOKEN` = Token from logentries to use.
+
+`LOG_FILE_ERRORS`
+
+`LOG_FILE_ALL`
+
+`LOG_FILE_EVENTS`
+
+`LOG_LEVELS_CONSOLE`
+
+`LOG_LEVELS_FILE`
+
+#### Uploads
+`UPLOADS_STRATEGY` = `local` or `s3`. Whether Uploaded files should be saved locally or moved to s3.
+
+`UPLOADS_TEMP` = temp folders in which to keep the uploaded files.
+
+`UPLOADS_BASE` = folders in which uploaded files will be stored permanently.
+
+##### For Local Uploads
+
+`UPLOADS_LOCAL_PATH` = folders in which uploaded files will be stored permanently.
+
+`UPLOADS_LOCAL_HOST` = host in which uploaded files will be stored permanently.
+
+##### For S3 Uploads
+`UPLOADS_S3_API_VERSION`
+
+`UPLOADS_S3_REGION`
+
+`UPLOADS_S3_ACCESS_KEY`
+
+`UPLOADS_S3_SECRET_KEY`
+
+`UPLOADS_S3_OMIT_CREDENTIALS`
+
+`UPLOADS_S3_BUCKET`
