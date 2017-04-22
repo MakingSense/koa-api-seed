@@ -40,12 +40,6 @@ if (config.env === "test") {
     };
 } else {
     let transports = [
-        new winston.transports.Logentries({
-            level: config.logs.logentries.level,
-            token: config.logs.logentries.token,
-            tags: [config.env],
-            json: true
-        }),
         new winston.transports.Console({colorize: true, level: config.logs.levels.console, timestamp: true}),
         new winston.transports.File({
             name: "errorLog",
@@ -76,14 +70,29 @@ if (config.env === "test") {
             filename: config.logs.files.events
         })
     ], exceptionHandlers = [
-        new winston.transports.Logentries({
+        new winston.transports.Console({colorize: true, timestamp: true, level: config.logs.levels.console})
+    ];
+
+    if (config.logs.logentries.token) {
+        let logentriesTransport = new winston.transports.Logentries({
             level: config.logs.logentries.level,
             token: config.logs.logentries.token,
             tags: [config.env],
             json: true
-        }),
-        new winston.transports.Console({colorize: true, timestamp: true, level: config.logs.levels.console})
-    ];
+        });
+
+
+        let logentriesExceptionHandler = new winston.transports.Logentries({
+            level: config.logs.logentries.level,
+            token: config.logs.logentries.token,
+            tags: [config.env],
+            json: true
+        });
+
+        transports.unshift(logentriesTransport);
+        exceptionHandlers.unshift(logentriesExceptionHandler);
+    }
+
     logger = new (winston.Logger)({
         levels: logLevels.levels,
         transports: transports,
