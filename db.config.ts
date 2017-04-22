@@ -2,7 +2,7 @@ import config from "./configs/config";
 import * as mongoose from "mongoose";
 
 function setupDb(app) {
-    mongoose.Promise = global.Promise;
+    (<any>mongoose).Promise = global.Promise;
     mongoose.connect(config.db.url);
 
     mongoose.connection.on("error", function (err) {

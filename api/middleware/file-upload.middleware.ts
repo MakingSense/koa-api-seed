@@ -16,7 +16,7 @@ let magic = new Magic(MAGIC_MIME_TYPE);
 
 // Promisify callback functions
 let fsRename = promisify(fs.rename);
-let magicDetect = promisify(magic.detectFile, {
+let magicDetect: any = promisify(magic.detectFile, {
     context: magic
 });
 

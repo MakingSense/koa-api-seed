@@ -3,14 +3,35 @@ import * as timestamps from "mongoose-timestamp";
 import * as crypto from "crypto";
 import * as moment from "moment";
 import {promisify} from "bluebird";
-import {Schema} from "mongoose";
+import {Model, Schema, Document, NativeError} from "mongoose";
 import * as base64url from "base64-url";
 
 import config from "../../configs/config";
 
 let pbkdf2Async: any = promisify(<any>crypto.pbkdf2);
 
-let ForgotPasswordSchema = new mongoose.Schema({
+export declare interface ForgotPasswordDocument extends Document {
+    user: {
+        reference: any;
+        firstName: string;
+        lastName: string;
+        email: string;
+    },
+    code: string,
+    validUntil: Date,
+    usedOn: Date,
+    status: "used" | "valid" | "invalid"
+    isValid(): boolean;
+    use(): ForgotPasswordDocument;
+    makeCode(): string;
+}
+
+export declare interface ForgotPasswordModel extends Model<ForgotPasswordDocument> {
+    adminOnlyFields(): string[];
+    validRoles(): string[];
+}
+
+let ForgotPasswordSchema = new Schema({
     user: {
         reference: {type: Schema.Types.ObjectId, ref: "User"},
         firstName: String,
@@ -50,7 +71,7 @@ ForgotPasswordSchema.methods = {
     },
 };
 
-ForgotPasswordSchema.pre("save", true, async function (next, done) {
+ForgotPasswordSchema.pre("save", true, async function (next, done: any) {
     if (!this.isModified("user")) {
         next();
         done();
@@ -88,7 +109,7 @@ ForgotPasswordSchema.pre("save", function (next) {
     next();
 });
 
-ForgotPasswordSchema.post("init", async function (doc: any, next) {
+ForgotPasswordSchema.post("init", async function (doc: ForgotPasswordDocument, next: (err?: NativeError) => void) {
     let hasExpired = doc.validUntil < new Date();
     if (hasExpired && doc.status === "valid") {
         doc.status = "invalid";
@@ -98,6 +119,6 @@ ForgotPasswordSchema.post("init", async function (doc: any, next) {
     next();
 });
 
-let ForgotPassword = mongoose.model("ForgotPassword", ForgotPasswordSchema);
+let ForgotPassword = mongoose.model<ForgotPasswordDocument, ForgotPasswordModel>("ForgotPassword", ForgotPasswordSchema);
 
 export {ForgotPassword};

@@ -13,11 +13,11 @@ class UserService {
 
     async create(userData, details = DEFAULT_REQUEST_DETAILS) {
         let user = new User(userData);
-        let savedUser: any = await user.save();
-        savedUser = _.omit(savedUser.toJSON(), "hashedPassword", "salt");
+        let savedUser = await user.save();
+        let userJson = savedUser.toJSON();
         UserEmailService.sendSignUpSuccessful(user, details);
-        Logger.log("info", "[UserService] [Create] user created successfully", {user: savedUser, details});
-        return savedUser;
+        Logger.log("info", "[UserService] [Create] user created successfully", {user: userJson, details});
+        return userJson;
     }
 
     async findById(id, details = DEFAULT_REQUEST_DETAILS) {

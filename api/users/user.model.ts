@@ -9,6 +9,7 @@ import {Logger} from "../shared/logger.service";
 
 export declare interface UserJson {
     id: string;
+    _id: any;
     firstName: string;
     lastName: string;
     address: any;
@@ -186,7 +187,7 @@ UserSchema
  * Pre-save hook
  */
 UserSchema
-    .pre("save", true, async function (next, done) {
+    .pre("save", true, async function (next, done: any) {
         if (!this._password) {
             next();
             return done();
