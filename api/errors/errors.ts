@@ -1,7 +1,8 @@
 interface ApiErrorConfig {
-    message: string,
-    details?: string,
-    code: number
+    message: string;
+    details?: string;
+    code: number;
+    event?: string;
 }
 
 const errors = {
