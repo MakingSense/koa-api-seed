@@ -33,10 +33,10 @@ describe("[API] [Users] [Forgot Password]", () => {
         deletedUser = await createUser(false, {deletedAt: new Date()});
     });
 
-    describe("[Create]", () => {
+    describe("[CREATE]", () => {
 
 
-        describe("[Successful]", () => {
+        describe("[SUCCESSFUL]", () => {
 
             beforeEach(clearAllForgotPassword);
 
@@ -136,7 +136,7 @@ describe("[API] [Users] [Forgot Password]", () => {
             });
         });
 
-        describe("[Successful]", () => {
+        describe("[SUCCESSFUL]", () => {
 
             it("should let a user use their code to change their password", async () => {
                 let newPassword = "asd123";
@@ -164,7 +164,7 @@ describe("[API] [Users] [Forgot Password]", () => {
             validCode = forgotPass.code;
         });
 
-        describe("[Successful]", () => {
+        describe("[SUCCESSFUL]", () => {
 
             it("should let a user use their code to change their password", async () => {
                 let path = `${baseEndpoint}/${validCode}`;
@@ -188,7 +188,7 @@ describe("[API] [Users] [Forgot Password]", () => {
             validCode = forgotPass.code;
         });
 
-        describe("[Unsuccessful]", () => {
+        describe("[UNSUCCESSFUL]", () => {
 
             it("should not let an unauthenticated user update a forgot password request", async () => {
                 let body = {
@@ -214,7 +214,7 @@ describe("[API] [Users] [Forgot Password]", () => {
             });
         });
 
-        describe("[Successful]", () => {
+        describe("[SUCCESSFUL]", () => {
 
             it("should let an admin update a forgot password request", async () => {
                 let request = await getHttpClientFromUser(admin);

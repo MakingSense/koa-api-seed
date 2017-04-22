@@ -17,7 +17,7 @@ let config = {
     },
 
     websockets: {
-        enabled: typeof (process.env.WEBSOCKETS_ENABLED) === "undefined" ? true : process.env.USE_COMPRESSION === "true",
+        enabled: typeof (process.env.WEBSOCKETS_ENABLED) === "undefined" ? true : process.env.WEBSOCKETS_ENABLED === "true",
         useAdapter: process.env.WEBSOCKETS_USE_ADAPTER === "true"
     },
 
@@ -42,7 +42,7 @@ let config = {
     },
 
     emails: {
-        from: "gabrielemanuel@gmail.com",
+        from: process.env.EMAIL_FROM,
         sendgrid: {
             apiKey: process.env.EMAIL_API_KEY
         }
