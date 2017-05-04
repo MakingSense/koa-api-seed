@@ -2,17 +2,20 @@ module.exports = function(wallaby) {
     return {
         // debug: true,
         files: [
-            {pattern: 'api/shared/email.service.ts', instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
-            {pattern: 'api/shared/logger.service.ts', instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
-            {pattern: 'db.config.ts', instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
-            '!api/**/*.spec.ts',
-            '!gulpfile*',
-            '!**/*.sample.ts',
-            'api/**/*.ts',
-            'configs/**/*.ts',
-            '*.ts',
-            'logs/**/*.log',
-            '.env',
+            {pattern: "api/shared/email.service.ts", instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
+            {pattern: "api/shared/logger.service.ts", instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
+            {pattern: "db.config.ts", instrument: false, load: true}, //do not include this in coverage cause we don't send emails during tests
+            "!api/**/*.spec.ts",
+            "!api/**/*.e2e.ts",
+            "!gulpfile*",
+            "!**/*.sample.ts",
+            "api/**/*.ts",
+            "configs/**/*.ts",
+            "*.ts",
+            "temp/",
+            "**/*.jpg",
+            "logs/**/*.log",
+            ".env",
         ],
         env: {
             type: 'node',
@@ -44,6 +47,9 @@ module.exports = function(wallaby) {
 
             require('dotenv').config({silent: true});
             process.env.USER_UPLOADS_SIZE_LIMIT = 50 * 1024; // 50KB
+            process.env.UPLOADS_TEMP = "/opt/api-seed/temp";
+            process.env.UPLOADS_LOCAL_PATH = "/opt/api-seed";
+            process.env.SENSOR_DEFAULT_IMAGE = "asd.png";
 
             let mongoose = require('mongoose');
             mongoose.models = {};
