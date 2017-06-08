@@ -66,7 +66,8 @@ Users, Roles, Emails, Websockets, Logging, Facebook, Live Reload, S3 Uploads, TD
 
 `PORT` = port to which KOA will bind.
 
-`DATABASE_URL` = URI for the MongoDB database.
+`DATABASE_URL` = URI for the MongoDB database. (eg: `DATABASE_URL=mongodb://localhost/api-seed`
+)
 
 `REDIS_HOST` = Redis Host
 
