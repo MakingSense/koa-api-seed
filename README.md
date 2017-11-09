@@ -1,5 +1,7 @@
 # API Seed
 
+>originally based on [https://github.com/arg20/koa-api-seed](https://github.com/arg20/koa-api-seed)
+
 This seed has the following stack implemented:
 
 * Node.js
