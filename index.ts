@@ -1,3 +1,5 @@
+import frontend from "./frontend/frontend.routes";
+
 require("dotenv").config({silent: true});
 
 import config from "./configs/config";
@@ -9,6 +11,7 @@ import * as socketRedis from "socket.io-redis";
 import api from "./api/api.routes";
 import auth from "./api/auth.routes";
 import status from "./api/status.routes";
+
 
 import localUploads from "./api/middleware/local-uploads.routes";
 
@@ -23,10 +26,18 @@ let io = new IO();
 
 io.attach(app);
 
+app.use(require("koa-views")(__dirname + "/../frontend/views", {
+    extension: "html",
+    // map: {
+    //     html: "handlebars"
+    // }
+}));
+
 connectToDb(app);
 setupKoa(app);
 app.use(errorHandler);
 
+app.use(frontend.routes());
 app.use(auth.routes());
 app.use(api.routes());
 app.use(status.routes());
