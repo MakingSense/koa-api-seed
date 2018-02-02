@@ -69,16 +69,6 @@ let getHttpClientFromUser = async (user?) => {
     });
 };
 
-let getHttpClientFromBook = async (user?) => {
-    if (!user) {
-        return request.defaults({json: true});
-    }
-
-    return request.defaults({
-        json: true
-    });
-};
-
 
 let imagesPaths = {
     users: {
@@ -101,5 +91,4 @@ export {
     clearAllBooks,
     clearAllForgotPassword,
     getHttpClientFromUser,
-    getHttpClientFromBook
 };

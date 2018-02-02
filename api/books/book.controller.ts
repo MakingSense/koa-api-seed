@@ -55,9 +55,8 @@ class BookController {
 
     async delete(ctx, next) {
         let requestDetails = ctx.details;
-        let hard = ctx.query.hard === "true";
         let isbn = ctx.params.isbn;
-        let removedUser = await BookService.delete(isbn, hard, requestDetails);
+        let removedUser = await BookService.delete(isbn, requestDetails);
         ctx.body = removedUser;
     }
 }

@@ -49,7 +49,7 @@ class BookService {
             search.deletedAt = {$exists: query.active !== "true"};
         }
 
-        if (query.active !== "true" && !details.isAdmin) {
+        if (query.active !== "true") {
             throw new ApiError(errors.generic.unauthorized);
         }
 
@@ -73,6 +73,9 @@ class BookService {
 
     async delete(isbn, details = DEFAULT_REQUEST_DETAILS) {
         let book = await Book.findOne({"isbn": isbn});
+        if (!book) {
+            throw new ApiError(errors.books.not_found);
+        }
         book.deletedAt = new Date();
         let deletedBook = await book.save();
         Logger.log("info", "[BookService] [Delete] Admin soft-deleted book successfully", {book, details});
