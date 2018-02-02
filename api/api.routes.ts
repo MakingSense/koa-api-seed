@@ -25,7 +25,7 @@ users.post("/forgot-password/use", userCtrl.changePasswordByCode);
 users.get("/forgot-password/:code", userCtrl.findForgotPassword);
 users.put("/forgot-password/:code", authCtrl.adminsOnly, userCtrl.updateForgotPassword);
 
-// users.use(authCtrl.isLoggedIn);
+users.use(authCtrl.isLoggedIn);
 
 users.get("/", userCtrl.search);
 users.get("/:user", userCtrl.show);
@@ -43,11 +43,6 @@ users.post(
 /**
  * Book Routes
  */
-//users.param("book", userCtrl.loadUser);
-
-//books.use(authCtrl.loadUser);
-//books.use(authCtrl.loadUserDetails);
-
 books.get("/", bookCtrl.search);
 books.get("/:isbn", bookCtrl.show);
 books.put("/:isbn", bookCtrl.update);
