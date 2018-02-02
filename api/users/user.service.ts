@@ -29,8 +29,8 @@ class UserService {
             "verify_email": false
         };
 
-        Logger.log("info", "[UserService] [Create] sent to auth0", {user: userToCreate, details});
         let auth0user = await Auth0Service.register(userToCreate);
+        Logger.log("info", "[UserService] [Create] sent to auth0", {user: userToCreate, details});
 
         if (auth0user) {
             Logger.log("info", "[UserService] [Create] created in auth0", {user: auth0user, details});

@@ -3,13 +3,11 @@ import config from "../../configs/config";
 import * as request from "request-promise";
 
 const baseEndpoint = `${config.auth0.url}/api/v2`;
-import {Logger} from "../shared/logger.service";
-// let request = request.defaults({json: true});
 
 
 class Auth0Service {
 
-    addAutorizationToHttpClient (body) {
+    getOptions (body) {
         return {
             headers: {
                 Authorization: `Bearer ${config.auth0.token}`
@@ -22,12 +20,7 @@ class Auth0Service {
     }
 
     async register(user) {
-        console.log(user);
-        console.log(`${baseEndpoint}/users`);
-        // let client = await this.addAutorizationToHttpClient(user);
-
-
-        request(this.addAutorizationToHttpClient(user))
+        request(`${baseEndpoint}/users`, this.getOptions(user))
             .then(function (htmlString) {
                 // Process html...
                 console.log(htmlString);
@@ -35,12 +28,7 @@ class Auth0Service {
             .catch(function (err) {
                 console.log(err);
             });
-
-        //let auth0User = await client.post(`${baseEndpoint}/users`, user);
-        // console.log(auth0User);
-        // return auth0User;
     }
-
 }
 
 let singleton = new Auth0Service();
