@@ -1,7 +1,4 @@
-import * as _ from "lodash";
-
 import {Logger} from "../shared/logger.service";
-
 import {DEFAULT_REQUEST_DETAILS} from "../../koa.config";
 import {Book} from "./book.model";
 import {ApiError} from "../errors/api-error.errors";
@@ -80,11 +77,6 @@ class BookService {
         let deletedBook = await book.save();
         Logger.log("info", "[BookService] [Delete] Admin soft-deleted book successfully", {book, details});
         return deletedBook.toJSON();
-    }
-
-    private sanitize(changes: any) {
-        //noinspection TypeScriptUnresolvedFunction
-        return _.omit(changes, Book.adminOnlyFields());
     }
 }
 
