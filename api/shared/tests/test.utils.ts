@@ -3,11 +3,14 @@ import * as request from "request-promise";
 import * as mongoose from "mongoose";
 
 import {getRandomUser} from "./fixtures/user.fixture";
+import {getRandomBook} from "./fixtures/book.fixture";
 
 import userService from "../../users/user.service";
+import booksService from "../../books/book.service";
 import authService from "../../auth/auth.service";
 import {ForgotPassword} from "../../users/forgot-password-request.model";
 import * as path from "path";
+import {Book} from "../../books/book.model";
 
 let User = mongoose.model("User");
 
@@ -35,6 +38,22 @@ let createUsers = async (number, createAdmin = false) => {
 
 let clearAllUsers = async () => await User.remove({});
 
+let createBook = async ( props = {}) => {
+    let bookProps = Object.assign({}, props);
+    let bookData = getRandomBook(bookProps);
+    return booksService.create(bookData);
+};
+
+let createBooks = async (number) => {
+    let books = [];
+    _.times(number, (n) => {
+        books.push(createBook());
+    });
+    return await Promise.all(books);
+};
+
+let clearAllBooks = async () => await Book.remove({});
+
 let clearAllForgotPassword = async () => await ForgotPassword.remove({});
 
 let getHttpClientFromUser = async (user?) => {
@@ -50,6 +69,7 @@ let getHttpClientFromUser = async (user?) => {
     });
 };
 
+
 let imagesPaths = {
     users: {
         correct: path.resolve(__dirname + "/media/image_correct.jpg"),
@@ -62,9 +82,13 @@ export {
     imagesPaths,
     getRandomInt,
     getRandomUser,
+    getRandomBook,
     createUser,
     createUsers,
+    createBook,
+    createBooks,
     clearAllUsers,
+    clearAllBooks,
     clearAllForgotPassword,
-    getHttpClientFromUser
+    getHttpClientFromUser,
 };

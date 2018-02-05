@@ -10,25 +10,12 @@ import {errors} from "../errors/errors";
 class AuthController {
 
     async login(ctx, next) {
-        await passport.authenticate("local", async (err, user, info) => {
-            let error = err || info;
-
-            if (error) {
-                ctx.status = 401;
-                ctx.body = err;
-                return;
-            }
-
-            if (!user) {
-                ctx.status = 404;
-                ctx.body = {message: "Something went wrong, please try again."};
-                return;
-            }
-
-            let token = authService.signToken(user);
-            ctx.body = {token};
-            await next();
-        })(ctx, next);
+        try {
+            return await authService.login(ctx, next);
+        }
+        catch (ex) {
+            return null;
+        }
     }
 
     async loginAs(ctx, next) {
