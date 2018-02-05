@@ -8,6 +8,12 @@ import {errors} from "../errors/errors";
 import {UserDocument} from "./user.model";
 
 class UserController {
+    async create(ctx, next) {
+        let requestDetails = ctx.details;
+        let userData = ctx.request.body;
+        let createdUser = await UserService.create(userData, requestDetails);
+        ctx.body = createdUser;
+    }
 
     async loadUser(id, ctx, next) {
         let requestDetails = ctx.details;
@@ -38,13 +44,6 @@ class UserController {
         let query = ctx.request.query;
         let results = await UserService.search(query, requestDetails);
         ctx.body = results;
-    }
-
-    async create(ctx, next) {
-        let requestDetails = ctx.details;
-        let userData = ctx.request.body;
-        let createdUser = await UserService.create(userData, requestDetails);
-        ctx.body = createdUser;
     }
 
     async createForgotPassword(ctx, next) {

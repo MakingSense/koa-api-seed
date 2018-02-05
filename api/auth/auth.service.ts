@@ -9,27 +9,34 @@ import {ApiError} from "../errors/api-error.errors";
 import {errors} from "../errors/errors";
 import {User} from "../users/user.model";
 import {DEFAULT_REQUEST_DETAILS} from "../../koa.config";
+import { UserEmailService } from "../users/user-email.service";
+import * as request from "request-promise";
+import { Auth0Service as auth0Service} from "./auth0.service";
 
 const aWeek = 60 * 60 * 24 * 7;
 
-
 class AuthService {
+    async login(ctx, next) {
+        let {email, password} = ctx.request.body;
 
-    async login(email, password, details = DEFAULT_REQUEST_DETAILS) {
         if (!email) {
-            Logger.log("error", "[AuthService] [Login] you need to provide an email", {email, details});
+            Logger.log("error", "[AuthService] [Login] you need to provide an email");
             throw new ApiError(errors.auth.no_username);
         }
 
         if (!password) {
-            Logger.log("error", "[AuthService] [Login] you need to provide a password", {email, details});
+            Logger.log("error", "[AuthService] [Login] you need to provide a password");
             throw new ApiError(errors.auth.no_password);
         }
 
-        let user = await userService.checkEmailAndPassword(email, password);
-        let token = this.signToken(user);
-        Logger.log("info", "[AuthService] [Login] User logged in successfully", {email, user, details});
-        return {user, token};
+        const response = await auth0Service.login({email, password});
+
+        if (!response) {
+            Logger.log("error", "[AuthService] [Login] error login user against auth0");
+            throw new ApiError(errors.auth.auth0_login_error);
+        }
+
+        ctx.body = response;
     }
 
     async loginAs(idOrEmail, details = DEFAULT_REQUEST_DETAILS) {

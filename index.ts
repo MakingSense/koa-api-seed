@@ -9,12 +9,9 @@ import * as socketRedis from "socket.io-redis";
 import api from "./api/api.routes";
 import auth from "./api/auth.routes";
 import status from "./api/status.routes";
-
 import localUploads from "./api/middleware/local-uploads.routes";
-
 import setupKoa from "./koa.config";
 import setUpSocketRoutes from "./api/sockets.routes";
-
 import connectToDb from "./db.config";
 import errorHandler from "./api/middleware/error-handler.middleware";
 
@@ -23,10 +20,14 @@ let io = new IO();
 
 io.attach(app);
 
+app.use(require("koa-views")(__dirname + "/../frontend/views", {
+    extension: "html",
+}));
+
 connectToDb(app);
 setupKoa(app);
 app.use(errorHandler);
-
+// app.use(frontend.routes());
 app.use(auth.routes());
 app.use(api.routes());
 app.use(status.routes());

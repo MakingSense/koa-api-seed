@@ -41,6 +41,11 @@ let config = {
         }
     },
 
+    auth0: {
+        url: process.env.AUTH0_URL || "",
+        token: process.env.AUTH0_TOKEN || "",
+    },
+
     emails: {
         from: process.env.EMAIL_FROM,
         sendgrid: {
