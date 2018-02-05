@@ -21,6 +21,11 @@ const errors = {
             message: "NO_USERNAME_PROVIDED",
             log: "The body of the request must contain an \"email\" field.",
             code: 400,
+        },
+        auth0_login_error: {
+            message: "AUTH0_LOGIN_ERROR",
+            log: "An error ocurred login user in Auth0",
+            code: 500
         }
     },
     books: {
@@ -66,6 +71,11 @@ const errors = {
             log: "The user has been deleted.",
             code: 403,
         },
+        auth0_register_error: {
+            message: "AUTH0_REGISTER_ERROR",
+            log: "An error ocurred registering user in Auth0",
+            code: 500
+        }
     },
     upload: {
         field_not_found: {

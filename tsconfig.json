@@ -5,7 +5,8 @@
     "emitDecoratorMetadata": true,
     "module": "commonjs",
     "outDir": "build",
-    "target": "es6"
+    "target": "es6",
+    "sourceMap": true
   },
   "exclude": [
     "gulpfile.js",

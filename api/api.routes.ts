@@ -4,6 +4,11 @@ import authCtrl from "./auth/auth.controller";
 import bookCtrl from "./books/book.controller";
 import {getMultipartParser, getUploadValidationMiddleware} from "./middleware/file-upload.middleware";
 import uploadStrategyDecider from "./middleware/uploadStrategyDecider";
+import userController from "./users/user.controller";
+import config from "../configs/config";
+
+import { race } from "bluebird";
+
 
 let api = new Router();
 let users = new Router();
@@ -20,6 +25,8 @@ users.use(authCtrl.loadUser);
 users.use(authCtrl.loadUserDetails);
 
 users.post("/", userCtrl.create);
+users.post("/login", authCtrl.login);
+
 users.post("/forgot-password", userCtrl.createForgotPassword);
 users.post("/forgot-password/use", userCtrl.changePasswordByCode);
 users.get("/forgot-password/:code", userCtrl.findForgotPassword);

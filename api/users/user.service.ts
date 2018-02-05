@@ -5,7 +5,7 @@ import {Logger} from "../shared/logger.service";
 
 import {DEFAULT_REQUEST_DETAILS} from "../../koa.config";
 import {User} from "./user.model";
-import Auth0Service from "../auth/auth0.service";
+import { Auth0Service as auth0Service } from "../auth/auth0.service";
 import {ApiError} from "../errors/api-error.errors";
 import {errors} from "../errors/errors";
 import {ForgotPassword} from "./forgot-password-request.model";
@@ -13,35 +13,22 @@ import authService from "../auth/auth.service";
 import * as request from "request-promise";
 
 class UserService {
-
-
     async create(userData, details = DEFAULT_REQUEST_DETAILS) {
-        let userToCreate = {
-            "email": userData.email,
-            "password": userData.password,
-            "connection": "Username-Password-Authentication",
-            // "user_metadata":
-            //     {
-            //         firstName: userData.firstName,
-            //         lastName: userData.lastName
-            //     },
-            // "email_verified": false,
-            "verify_email": false
-        };
+        let auth0user = await auth0Service.register(userData);
 
-        let auth0user = await Auth0Service.register(userToCreate);
-        Logger.log("info", "[UserService] [Create] sent to auth0", {user: userToCreate, details});
-
-        if (auth0user) {
-            Logger.log("info", "[UserService] [Create] created in auth0", {user: auth0user, details});
-            let user = new User(userData);
-            let savedUser = await user.save();
-            let userJson = savedUser.toJSON();
-            UserEmailService.sendSignUpSuccessful(user, details);
-            Logger.log("info", "[UserService] [Create] user created successfully", {user: userJson, details});
-            return userJson;
+        if (!auth0user) {
+            throw new ApiError(errors.users.auth0_register_error);
         }
 
+        Logger.log("info", "[UserService] [Create] created in auth0", {user: auth0user, details});
+
+        let user = new User(userData);
+        let savedUser = await user.save();
+        let userJson = savedUser.toJSON();
+        UserEmailService.sendSignUpSuccessful(user, details);
+        Logger.log("info", "[UserService] [Create] user created successfully", {user: userJson, details});
+
+        return userJson;
     }
 
     async findById(id, details = DEFAULT_REQUEST_DETAILS) {
@@ -257,7 +244,6 @@ class UserService {
         return savedUser;
     }
 
-
     async createForgotPassword(email, details = DEFAULT_REQUEST_DETAILS) {
         let user: any = await this.findByEmail(email, details);
         if (!user) {
@@ -305,7 +291,6 @@ class UserService {
     async findForgotPasswordByCode(code, details = DEFAULT_REQUEST_DETAILS) {
         return ForgotPassword.findOne({code});
     }
-
 
     private sanitize(changes: any) {
         //noinspection TypeScriptUnresolvedFunction
