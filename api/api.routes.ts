@@ -1,11 +1,13 @@
 import * as Router from "koa-router";
 import userCtrl from "./users/user.controller";
 import authCtrl from "./auth/auth.controller";
+import bookCtrl from "./books/book.controller";
 import {getMultipartParser, getUploadValidationMiddleware} from "./middleware/file-upload.middleware";
 import uploadStrategyDecider from "./middleware/uploadStrategyDecider";
 
 let api = new Router();
 let users = new Router();
+let books = new Router();
 
 api.prefix("/api");
 
@@ -39,8 +41,18 @@ users.post(
 );
 
 /**
+ * Book Routes
+ */
+books.get("/", bookCtrl.search);
+books.get("/:isbn", bookCtrl.show);
+books.put("/:isbn", bookCtrl.update);
+books.delete("/:isbn", bookCtrl.delete);
+books.post("/", bookCtrl.create);
+
+/**
  * Mount routers
  */
 api.use("/users", users.routes());
+api.use("/books", books.routes());
 
 export default api;

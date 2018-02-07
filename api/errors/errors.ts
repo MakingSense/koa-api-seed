@@ -23,6 +23,13 @@ const errors = {
             code: 400,
         }
     },
+    books: {
+        not_found: {
+            message: "BOOK_NOT_FOUND",
+            log: "Book could not be found.",
+            code: 404,
+        }
+    },
     users: {
         username_taken: {
             message: "USERNAME_TAKEN",
